@@ -20,8 +20,8 @@ def _get_root_node(process: WindowsProcess) -> HashNode:
     # 48 8B 05 [D8 41 EC 01]
     hash_tree_offset = process.read_formatted(call_addr + 44, "i")
 
-    # 73 is start of the lea instruction and 7 is the length of it
-    hash_tree_addr = call_addr + 73 + hash_tree_offset + 7
+    # 41 is start of the lea instruction and 7 is the length of it
+    hash_tree_addr = call_addr + 41 + hash_tree_offset + 7
 
     pointer = process.read_formatted(hash_tree_addr, "Q")
     address = process.read_formatted(pointer, "Q")
