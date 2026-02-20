@@ -11,23 +11,17 @@ def _get_root_node(process: WindowsProcess) -> HashNode:
     # which is why we restrict the scan here
     hash_call_addr = process.scan_memory(HASH_CALL_PATTERN, module="WizardGraphicalClient.exe")[0]
 
-    print(hex(hash_call_addr))
-
     # E8 [B2 43 00 00]
     call_offset = process.read_formatted(hash_call_addr + 1, "i")
 
     # 5 is the length of the call instruction
     call_addr = hash_call_addr + call_offset + 5
 
-    print(hex(call_addr))
-
     # 48 8B 05 [BF 0A F7 01]
     hash_tree_offset = process.read_formatted(call_addr + 53, "i")
 
     # 41 is start of the lea instruction and 7 is the length of it
     hash_tree_addr = call_addr + 50 + hash_tree_offset + 7
-
-    print(hex(hash_tree_addr))
 
     pointer = process.read_formatted(hash_tree_addr, "Q")
     address = process.read_formatted(pointer, "Q")
