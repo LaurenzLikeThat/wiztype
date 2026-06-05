@@ -1,6 +1,6 @@
 [project]
 name = "wiztype"
-version = "0.1.11"
+version = "0.1.12"
 description = "A type dumper for wizard101"
 readme = "README.md"
 authors = [
