@@ -22,7 +22,7 @@
         self',
         ...
       }: let
-        python = pkgs.python311;
+        python = pkgs.python313;
       in {
         devShells.default = pkgs.mkShell {
           name = "wiztype";
