@@ -1,28 +1,38 @@
+set windows-shell := ["powershell"]
+
 # show this list
+[default]
 default:
     just --list
 
 # does a version bump commit
-bump-commit type: && create-tag
-    poetry version {{type}}
-    git commit -am "$(poetry version | awk '{print $2}' | xargs echo "bump to")"
+bump-commit type="minor": && create-tag
+    uv version --bump {{type}}
+    git commit -am ("bump to " + (uv version --short))
     git push
 
 # creates a new tag for the current version
 create-tag:
     git fetch --tags
-    poetry version | awk '{print $2}' | xargs git tag
+    git tag (uv version --short)
     git push --tags
 
+
 # update deps
+[linux]
 update:
     nix flake update
-    # the poetry devs dont allow this with normal update for some unknown reason
-    poetry up --latest
+    uv sync --all-groups --upgrade
+
+# update deps
+[windows]
+update:
+    uv sync --all-groups --upgrade
+
 
 # do a dep bump commit with tag and version
 update-commit: update && create-tag
-    poetry version patch
+    uv version --bump patch
     git commit -am "bump deps"
     git push
 
